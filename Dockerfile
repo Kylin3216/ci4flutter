@@ -46,7 +46,7 @@ RUN wget --quiet --output-document=android-sdk.zip https://dl.google.com/android
 
 RUN wget --quiet --output-document=flutter.tar.xz https://storage.googleapis.com/flutter_infra_release/releases/{FLUTTER_CHANNEL}/linux/flutter_linux_${FLUTTER_VERSION}.tar.xz \
     && tar xf flutter.tar.xz -C /opt \
-    && rm flutter.zip
+    && rm flutter.tar.xz
 
 ENV PATH=$PATH:/opt/flutter/bin
 
