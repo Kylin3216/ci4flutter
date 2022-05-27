@@ -9,6 +9,8 @@ ENV ANDROID_SDK_TOOLS=8512546
 ENV FLUTTER_CHANNEL=stable
 ENV FLUTTER_VERSION=2.10.5-${FLUTTER_CHANNEL}
 
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+
 RUN apk -U update && apk -U add \
     bash \
     libarchive-tools \
@@ -44,7 +46,7 @@ RUN wget --quiet --output-document=android-sdk.zip https://dl.google.com/android
     && yes | /opt/android-sdk-linux/cmdline-tools/bin/sdkmanager --sdk_root=$ANDROID_HOME --licenses || echo "Failed" \
     && rm android-sdk.zip
 
-RUN wget --quiet --output-document=flutter.tar.xz https://storage.googleapis.com/flutter_infra_release/releases/{FLUTTER_CHANNEL}/linux/flutter_linux_${FLUTTER_VERSION}.tar.xz \
+RUN wget --quiet --output-document=flutter.tar.xz https://storage.flutter-io.cn/flutter_infra_release/releases/${FLUTTER_CHANNEL}/linux/flutter_linux_${FLUTTER_VERSION}.tar.xz \
     && tar xf flutter.tar.xz -C /opt \
     && rm flutter.tar.xz
 
