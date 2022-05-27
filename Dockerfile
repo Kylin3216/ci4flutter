@@ -44,7 +44,7 @@ RUN wget --quiet --output-document=android-sdk.zip https://dl.google.com/android
     && yes | /opt/android-sdk-linux/cmdline-tools/bin/sdkmanager --sdk_root=$ANDROID_HOME --licenses || echo "Failed" \
     && rm android-sdk.zip
 
-RUN wget --quiet --output-document=flutter.zip https://storage.googleapis.com/flutter_infra_release/releases/{FLUTTER_CHANNEL}/linux/flutter_linux_${FLUTTER_VERSION}.tar.xz \
+RUN wget --quiet --output-document=flutter.tar.xz https://storage.googleapis.com/flutter_infra_release/releases/{FLUTTER_CHANNEL}/linux/flutter_linux_${FLUTTER_VERSION}.tar.xz \
     && tar xf flutter.tar.xz -C /opt \
     && rm flutter.zip
 
