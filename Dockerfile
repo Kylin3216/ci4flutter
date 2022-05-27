@@ -25,6 +25,8 @@ RUN apk -U update && apk -U add \
     pulseaudio-dev \
     su-exec \
     ncurses \
+    tar \
+    xz \
     unzip \
     wget \
     zlib \
@@ -42,8 +44,8 @@ RUN wget --quiet --output-document=android-sdk.zip https://dl.google.com/android
     && yes | /opt/android-sdk-linux/cmdline-tools/bin/sdkmanager --sdk_root=$ANDROID_HOME --licenses || echo "Failed" \
     && rm android-sdk.zip
 
-RUN wget --quiet --output-document=flutter.zip https://storage.flutter-io.cn/flutter_infra_release/releases/{FLUTTER_CHANNEL}/linux/flutter_linux_${FLUTTER_VERSION}.zip \
-    && unzip flutter.zip -d /opt \
+RUN wget --quiet --output-document=flutter.zip https://storage.googleapis.com/flutter_infra_release/releases/{FLUTTER_CHANNEL}/linux/flutter_linux_${FLUTTER_VERSION}.tar.xz \
+    && tar xf flutter.tar.xz -C /opt \
     && rm flutter.zip
 
 ENV PATH=$PATH:/opt/flutter/bin
