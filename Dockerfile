@@ -1,57 +1,16 @@
-FROM alpine:latest
+FROM ubuntu:latest
 
-LABEL tech.dreamfund.image.authors="xiasuwan@gmail.com"
-LABEL version="1.0"
+RUN apt-get update && apt-get install -y curl file git zip xz-utils && apt-get clean
 
-ENV ANDROID_COMPILE_SDK=30
-ENV ANDROID_BUILD_TOOLS=30.0.3 
-ENV ANDROID_SDK_TOOLS=8512546
-ENV FLUTTER_CHANNEL=stable
-ENV FLUTTER_VERSION=2.10.5-${FLUTTER_CHANNEL}
+ENV FLUTTER_VERSION=3.3.0
 
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+WORKDIR /usr
+RUN curl -O https://storage.flutter-io.cn/flutter_infra_release/releases/stable/linux/flutter_linux_${FLUTTER_VERSION}-stable.tar.xz && \
+    tar xf flutter_linux_${FLUTTER_VERSION}-stable.tar.xz && \
+    rm -f flutter_linux_${FLUTTER_VERSION}-stable.tar.xz
 
-RUN apk -U update && apk -U add \
-    bash \
-    libarchive-tools \
-    ca-certificates \
-    curl \
-    expect \
-    fontconfig \
-    git \
-    make \
-    libstdc++ \
-    libgcc \
-    mesa-dev \
-    openjdk11 \
-    pulseaudio-dev \
-    su-exec \
-    ncurses \
-    tar \
-    xz \
-    unzip \
-    wget \
-    zlib \
-    && rm -rf /tmp/* \
-    && rm -rf /var/cache/apk/*
+ENV PATH=$PATH:/usr/flutter/bin
 
-ENV ANDROID_HOME=/opt/android-sdk-linux
-ENV PATH=$PATH:/opt/android-sdk-linux/platform-tools/
+RUN flutter precache && flutter doctor -v
 
-RUN wget --quiet --output-document=android-sdk.zip https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_TOOLS}_latest.zip \
-    && unzip android-sdk.zip -d /opt/android-sdk-linux/ \
-    && echo "y" | /opt/android-sdk-linux/cmdline-tools/bin/sdkmanager --sdk_root=$ANDROID_HOME "platforms;android-${ANDROID_COMPILE_SDK}" \
-    && echo "y" | /opt/android-sdk-linux/cmdline-tools/bin/sdkmanager --sdk_root=$ANDROID_HOME "platform-tools" \
-    && echo "y" | /opt/android-sdk-linux/cmdline-tools/bin/sdkmanager --sdk_root=$ANDROID_HOME "build-tools;${ANDROID_BUILD_TOOLS}" \
-    && yes | /opt/android-sdk-linux/cmdline-tools/bin/sdkmanager --sdk_root=$ANDROID_HOME --licenses || echo "Failed" \
-    && rm android-sdk.zip
-
-RUN wget --quiet --output-document=flutter.tar.xz https://storage.flutter-io.cn/flutter_infra_release/releases/${FLUTTER_CHANNEL}/linux/flutter_linux_${FLUTTER_VERSION}.tar.xz \
-    && tar xf flutter.tar.xz -C /opt \
-    && rm flutter.tar.xz
-
-ENV PATH=$PATH:/opt/flutter/bin
-
-RUN yes | flutter doctor --android-licenses && flutter doctor 
-
-CMD [ "bash" ]
+CMD ["bash"]
