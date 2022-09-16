@@ -1,4 +1,4 @@
-FROM cirrusci/flutter:2.10.5
+FROM cirrusci/flutter:3.3.0
 
 RUN flutter create --platform android test \
     && cd test && flutter build apk \
